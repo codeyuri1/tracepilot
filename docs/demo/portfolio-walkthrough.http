@@ -1,0 +1,45 @@
+### 1. Obtain a synthetic local token (requires the `local` Spring profile)
+# @name token
+GET http://localhost:8080/local/demo-token?role=INCIDENT_WRITER
+
+> {% client.global.set("writerToken", response.body.accessToken); %}
+
+### 2. Register a synthetic incident
+# @name createIncident
+POST http://localhost:8080/api/v1/incidents
+Authorization: Bearer {{writerToken}}
+Content-Type: application/json
+X-Correlation-Id: portfolio-intake-001
+
+{
+  "title": "Payment worker cannot reach PostgreSQL",
+  "stackTrace": "org.postgresql.util.PSQLException: Connection to payments-db refused at com.example.payments.Worker.run(Worker.java:42)",
+  "source": "payment-worker",
+  "severity": "HIGH"
+}
+
+> {% client.global.set("incidentId", response.body.id); %}
+
+### 3. Obtain a reader token and retrieve the public incident contract
+# @name readerToken
+GET http://localhost:8080/local/demo-token?role=INCIDENT_READER
+
+> {% client.global.set("readerToken", response.body.accessToken); %}
+
+GET http://localhost:8080/api/v1/incidents/{{incidentId}}
+Authorization: Bearer {{readerToken}}
+
+### 4. Request analysis (configure an Ollama or OpenAI profile for a successful model response)
+# @name analystToken
+GET http://localhost:8080/local/demo-token?role=ANALYST
+
+> {% client.global.set("analystToken", response.body.accessToken); %}
+
+POST http://localhost:8080/api/v1/incidents/{{incidentId}}/analyses
+Authorization: Bearer {{analystToken}}
+Content-Type: application/json
+X-Correlation-Id: portfolio-analysis-001
+
+### 5. Show safe failure handling when no model is configured
+# With only the `local` profile, the previous request responds with 503 Problem Details,
+# not an invented diagnosis. Start with `local,openai` or configure Ollama to demonstrate 201.

@@ -1,0 +1,9 @@
+apiVersion: 1
+providers:
+  - name: tracepilot
+    orgId: 1
+    folder: TracePilot
+    type: file
+    disableDeletion: true
+    options:
+      path: /var/lib/grafana/dashboards

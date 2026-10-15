@@ -1,0 +1,6 @@
+[
+  {
+    "query": "PostgreSQL connection refused in payment worker",
+    "expectedSourceIds": ["runbook-postgresql-connectivity", "incident-payment-db-001"]
+  }
+]

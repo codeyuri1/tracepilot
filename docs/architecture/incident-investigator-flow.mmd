@@ -1,0 +1,38 @@
+flowchart LR
+    U["Operador / Cliente"] -->|"JWT + role + tenant"| API["Spring Boot REST API"]
+    API --> SEC["Spring Security\nJWT · RBAC · tenant"]
+    API --> USE["Application use cases"]
+
+    USE --> INC["IncidentService\nintake e consulta"]
+    USE --> ANA["AnalysisService\nprompt · validação · lifecycle"]
+    USE --> INV["InvestigationOrchestrator\nallowlist · timeout · cache · budget"]
+    USE --> RET["Knowledge Retrieval\nvetorial + lexical + ranking"]
+
+    INC --> PORTS["Domain ports"]
+    ANA --> PORTS
+    RET --> PORTS
+
+    PORTS --> JPA["PostgreSQL\nincidents · analyses"]
+    PORTS --> VEC["pgvector\nknowledge chunks"]
+    ANA --> LLM["Spring AI\nOllama / OpenAI"]
+    INV --> TOOLS["Java tools restritas\nstack trace · docs · similares"]
+
+    API --> OBS["Observabilidade\ncorrelation ID · métricas · redaction"]
+    OBS --> ACT["Actuator / Prometheus"]
+
+    subgraph Quality["Qualidade e operação"]
+        EVAL["Evals versionadas\nRecall@k · MRR · source precision"]
+        CI["CI + Testcontainers"]
+        EVENT["Contrato de evento\nidempotência + DLQ antes de Kafka"]
+    end
+
+    RET --> EVAL
+    JPA --> CI
+    ANA -. "evolução assíncrona" .-> EVENT
+
+    classDef boundary fill:#e8f1ff,stroke:#2563eb,color:#172554;
+    classDef core fill:#ecfdf5,stroke:#059669,color:#064e3b;
+    classDef infra fill:#fff7ed,stroke:#ea580c,color:#7c2d12;
+    class API,SEC boundary;
+    class USE,INC,ANA,INV,RET,PORTS core;
+    class JPA,VEC,LLM,TOOLS,OBS,ACT,EVAL,CI,EVENT infra;

@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: tracepilot
+  ai:
+    model:
+      chat: none
+      embedding: none
+      image: none
+      audio:
+        transcription: none
+        speech: none
+      moderation: none
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+app:
+  security:
+    # Development-only default. Production must supply APP_SECURITY_JWT_SECRET (32+ bytes).
+    jwt-secret: ${APP_SECURITY_JWT_SECRET:change-this-development-only-secret-key}
+  analysis:
+    prompt-version: v3
