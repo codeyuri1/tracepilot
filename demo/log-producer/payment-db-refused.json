@@ -1,0 +1,6 @@
+{
+  "service": "payment-worker",
+  "level": "ERROR",
+  "message": "PostgreSQL payment database unavailable",
+  "stackTrace": "org.postgresql.util.PSQLException: Connection refused at com.example.payment.Worker.run(Worker.java:42)"
+}

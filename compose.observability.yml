@@ -1,0 +1,22 @@
+services:
+  app:
+    environment:
+      SPRING_PROFILES_ACTIVE: local,showcase,observability
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    profiles: [observability]
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      app:
+        condition: service_healthy
+  grafana:
+    image: grafana/grafana:12.1.0
+    profiles: [observability]
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus

@@ -1,0 +1,90 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    profiles: [showcase]
+    environment:
+      POSTGRES_DB: incident_investigator
+      POSTGRES_USER: incident
+      POSTGRES_PASSWORD: incident
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U incident -d incident_investigator"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  app:
+    build: .
+    profiles: [showcase]
+    ports:
+      - "127.0.0.1:${API_PORT:-8080}:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: local,showcase
+      DEMO_DATABASE_URL: jdbc:postgresql://postgres:5432/incident_investigator
+      DEMO_DATABASE_USERNAME: incident
+      DEMO_DATABASE_PASSWORD: incident
+      APP_SECURITY_JWT_SECRET: demo-only-signing-secret-that-is-at-least-32-bytes
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8080/actuator/health | grep -q 'UP'"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  log-producer:
+    build: demo/log-producer
+    profiles: [e2e]
+    environment:
+      APP_URL: http://app:8080
+      SHARED_DIR: /shared
+      SIMULATION_CONTINUOUS: "false"
+      SIMULATION_ANALYZE: "false"
+    volumes:
+      - demo-shared:/shared
+    depends_on:
+      app:
+        condition: service_healthy
+
+  incident-simulator:
+    build: demo/log-producer
+    profiles: [showcase]
+    environment:
+      APP_URL: http://app:8080
+      SIMULATION_CONTINUOUS: "true"
+      SIMULATION_ANALYZE: "true"
+      SIMULATION_INTERVAL_MS: ${SIMULATION_INTERVAL_MS:-10000}
+    depends_on:
+      app:
+        condition: service_healthy
+
+  demo-runner:
+    build: demo/runner
+    profiles: [e2e]
+    environment:
+      APP_URL: http://app:8080
+      ARTIFACTS_DIR: /artifacts
+      FIXTURES_FILE: /fixtures/events.ndjson
+    volumes:
+      - ./demo/fixtures:/fixtures:ro
+      - ./artifacts/demo:/artifacts
+    depends_on:
+      app:
+        condition: service_healthy
+
+  dashboard:
+    build: frontend
+    profiles: [showcase]
+    ports:
+      - "127.0.0.1:${DASHBOARD_PORT:-8081}:80"
+    depends_on:
+      app:
+        condition: service_healthy
+
+volumes:
+  demo-shared:

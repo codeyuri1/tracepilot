@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: ${DEMO_DATABASE_URL:jdbc:postgresql://postgres:5432/incident_investigator}
+    username: ${DEMO_DATABASE_USERNAME:incident}
+    password: ${DEMO_DATABASE_PASSWORD:incident}
+  ai:
+    model:
+      chat: none
+      embedding: none
+app:
+  analysis:
+    model: deterministic-showcase-model
+    prompt-version: showcase-v3

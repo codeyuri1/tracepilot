@@ -1,0 +1,33 @@
+{
+  "passed": 27,
+  "failed": 0,
+  "scenarios": {
+    "health_ready": "passed",
+    "api_requires_token": "passed",
+    "invalid_token_rejected": "passed",
+    "metrics_require_token": "passed",
+    "reader_cannot_write": "passed",
+    "writer_cannot_analyze": "passed",
+    "invalid_input_rejected": "passed",
+    "openapi_available": "passed",
+    "synthetic_mass_ingestion": "passed",
+    "reader_incident_lookup": "passed",
+    "tenant_incident_hidden": "passed",
+    "tenant_analysis_hidden": "passed",
+    "tenant_cannot_analyze": "passed",
+    "tenant_list_isolation": "passed",
+    "five_scenarios_and_analysis_history": "passed",
+    "unsupported_evidence_rejected": "passed",
+    "log_input_sanitized": "passed",
+    "incident_input_sanitized": "passed",
+    "knowledge_ingestion": "passed",
+    "knowledge_deduplication": "passed",
+    "rag_retrieval": "passed",
+    "rag_tenant_isolation": "passed",
+    "same_content_independent_tenant_copy": "passed",
+    "tool_allowlist": "passed",
+    "tool_cache_and_correlation": "passed",
+    "ops_metrics_available": "passed",
+    "acceptance_flow": "passed"
+  }
+}

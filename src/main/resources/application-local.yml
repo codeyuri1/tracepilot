@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/incident_investigator
+    username: incident
+    password: incident
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC

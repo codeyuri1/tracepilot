@@ -1,0 +1,8 @@
+app:
+  observability:
+    prometheus-public: true
+management:
+  metrics:
+    distribution:
+      percentiles-histogram:
+        incident_investigator.analysis.latency: true

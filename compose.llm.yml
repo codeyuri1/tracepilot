@@ -1,0 +1,14 @@
+services:
+  app:
+    ports: !override
+      - "127.0.0.1:18080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${LLM_PROFILES:-local,llm}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/incident_investigator
+      SPRING_DATASOURCE_USERNAME: incident
+      SPRING_DATASOURCE_PASSWORD: incident
+      AI_BASE_URL: ${AI_BASE_URL:-http://host.docker.internal:11434}
+      AI_API_KEY: ${AI_API_KEY:-ollama}
+      AI_MODEL: ${AI_MODEL:-qwen2.5-coder:7b}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
