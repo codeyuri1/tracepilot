@@ -1,0 +1,26 @@
+name: PR Policy
+on:
+  push:
+    branches: [main, "feat/**", "fix/**", "docs/**", "chore/**", "refactor/**", "test/**", "ci/**", "perf/**", "build/**", "revert/**"]
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+jobs:
+  policy:
+    name: PR Policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              const title = context.payload.head_commit.message.split('\n')[0];
+              if (!/^(feat|fix|docs|chore|refactor|test|ci|perf|build|revert)(\([\w./-]+\))?!?: .+/.test(title)) core.setFailed('O commit deve seguir Conventional Commits.');
+              return;
+            }
+            if (pr.base.ref !== 'main') core.setFailed('O destino deve ser main.');
+            if (!/^(feat|fix|docs|chore|refactor|test|ci|perf|build|revert)(\([\w./-]+\))?!?: .+/.test(pr.title)) core.setFailed('O título deve seguir Conventional Commits.');
+            if (!pr.body?.trim()) core.setFailed('Descreva a mudança e a validação no corpo do PR.');
