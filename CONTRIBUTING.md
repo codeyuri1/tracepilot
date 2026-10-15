@@ -31,4 +31,4 @@ python3 -m unittest discover -s demo/runner -p 'test_*.py'
 ./scripts/run-demo-e2e.sh
 ```
 
-Os testes de integração exigem Docker. `.gitignore` exclui dependências, builds, evidências brutas, modelos, dados de runtime e estado privado de ferramentas. Capturas e relatórios sintéticos selecionados em `docs/` permanecem versionados. Os contextos Docker incluem somente arquivos necessários para construir cada imagem.
+Os testes de integração exigem Docker. `.gitignore` exclui dependências, builds, evidências brutas, modelos, dados de runtime e estado privado de ferramentas. Capturas sintéticas do produto e documentação técnica permanecem versionadas. Planos de implementação, tarefas, revisões de sessão, relatórios locais e rascunhos de publicação ficam apenas no ambiente de desenvolvimento. Os contextos Docker incluem somente arquivos necessários para construir cada imagem.

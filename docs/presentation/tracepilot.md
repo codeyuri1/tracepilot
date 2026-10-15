@@ -175,7 +175,7 @@ A análise padrão recebe o incidente. Os endpoints de RAG e tools demonstram co
 
 Evoluções: autenticação por provedor externo, processamento assíncrono com outbox/idempotência/DLQ e avaliação com modelos reais. Publicação em produção exige remover emissor local e credenciais de demonstração.
 
-[Roteiro de vídeo e post](linkedin.md) · [Aceitação HTTP](../demo/e2e-suite.md) · [Verificação](../verification.md).
+[Aceitação HTTP](../demo/e2e-suite.md) · [Exemplos de requisições](../demo/portfolio-walkthrough.http).
 
 ---
 

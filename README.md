@@ -54,7 +54,7 @@ flowchart LR
     API --> Metrics[Actuator / Micrometer]
 ```
 
-Arquitetura e decisões: [visão técnica](docs/architecture.md), [ADRs](docs/decisions/), [specs](specs/README.md) e [contrato futuro de eventos](docs/events/incident-analysis-requested-v1.md).
+Arquitetura e decisões: [visão técnica](docs/architecture.md), [ADRs](docs/decisions/) e [contrato futuro de eventos](docs/events/incident-analysis-requested-v1.md).
 
 ## Testes e evidências
 
@@ -79,9 +79,9 @@ uv run --with playwright playwright install chromium
 uv run --with playwright python scripts/browser-smoke.py
 ```
 
-Ele testa cenários, análise, filtros, exportação, teclado, modais, recuperação de falha, temas, mobile e movimento reduzido. Executa axe em quatro estados e salva capturas e JSON em `output/playwright/`. Veja a [revisão UI/UX e as skills instaladas](docs/ui-ux-review.md). A suíte E2E verifica os cinco cenários e os níveis Leve/Médio/Alto, histórico, JWT/RBAC, isolamento por tenant, validação, sanitização, RAG, allowlist/cache de tools, correlation ID e métricas OPS. O script verifica ainda o HTML e o proxy da interface. Cada execução usa um projeto Compose novo, portas aleatórias e banco independente, sem alterar uma showcase já aberta.
+Ele testa cenários, análise, filtros, exportação, teclado, modais, recuperação de falha, temas, mobile e movimento reduzido. Executa axe em quatro estados e salva capturas e JSON em `output/playwright/`. A suíte E2E verifica os cinco cenários e os níveis Leve/Médio/Alto, histórico, JWT/RBAC, isolamento por tenant, validação, sanitização, RAG, allowlist/cache de tools, correlation ID e métricas OPS. O script verifica ainda o HTML e o proxy da interface. Cada execução usa um projeto Compose novo, portas aleatórias e banco independente, sem alterar uma showcase já aberta.
 
-Relatórios em `artifacts/demo/<run-id>/`: Markdown, JSON, JUnit com casos individuais e NDJSON com método/caminho/status. Tokens, cabeçalhos, corpos HTTP e logs brutos não são incluídos nesses relatórios. [Detalhes da suíte](docs/demo/e2e-suite.md) · [Resultados desta revisão](docs/verification.md).
+Relatórios em `artifacts/demo/<run-id>/`: Markdown, JSON, JUnit com casos individuais e NDJSON com método/caminho/status. Tokens, cabeçalhos, corpos HTTP e logs brutos não são incluídos nesses relatórios. [Detalhes da suíte](docs/demo/e2e-suite.md).
 
 O [workflow CI](.github/workflows/ci.yml) executa backend, frontend, testes das ferramentas e E2E em pull requests e pushes para `main`.
 
@@ -135,15 +135,15 @@ docker compose -f compose.demo.yml -f compose.llm.yml --profile showcase up --bu
 docker compose -f compose.demo.yml -f compose.observability.yml --profile showcase --profile observability up --build -d
 ```
 
-LLM: `AI_BASE_URL` (padrão `http://host.docker.internal:11434`), `AI_API_KEY` e `AI_MODEL` (padrão `qwen2.5-coder:7b`). Não versionar chaves em arquivos. A execução com provedor real depende de disponibilidade e qualidade do modelo. Há uma validação local real registrada em docs/verification.md; o CI E2E continua determinístico.
+LLM: `AI_BASE_URL` (padrão `http://host.docker.internal:11434`), `AI_API_KEY` e `AI_MODEL` (padrão `qwen2.5-coder:7b`). Não versionar chaves em arquivos. A execução com provedor real depende de disponibilidade e qualidade do modelo. O CI E2E usa o modo determinístico para manter os testes reproduzíveis.
 
 Grafana: http://localhost:3000, credenciais locais iniciais `admin/admin`, troca solicitada no primeiro acesso. O profile `observability` abre Prometheus internamente para scraping e é exclusivo de demonstração. Fora dele, métricas exigem `OPS`; health e info são públicos.
 
 Para desenvolvimento Java local: `docker compose up -d postgres` e `./mvnw spring-boot:run -Dspring-boot.run.profiles=local`. Esse profile isolado não configura um modelo; para a experiência completa, prefira a showcase Docker.
 
-## Apresentar no LinkedIn
+## Documentação
 
-Use o [roteiro de vídeo e texto do post](docs/presentation/linkedin.md), a [apresentação técnica](docs/presentation/tracepilot.md) e o [roteiro HTTP](docs/demo/portfolio-walkthrough.http). Demonstre a falha explícita e os testes junto com a interface: são parte central da proposta.
+Consulte a [apresentação técnica](docs/presentation/tracepilot.md) e os [exemplos HTTP](docs/demo/portfolio-walkthrough.http) para explorar os contratos e os fluxos do projeto.
 
 ## Contribuição
 
